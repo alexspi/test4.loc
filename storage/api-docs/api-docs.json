@@ -1,0 +1,292 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "OpenApi Documentation",
+        "description": "Документация для микро сервиса",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://test4.loc",
+            "description": "Основной API"
+        }
+    ],
+    "paths": {
+        "/api/getusers": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Получить список всех пользователей",
+                "description": "Получаем список всех доступных пользователей",
+                "operationId": "getUserAll",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/getuser/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Получение Пользователя и арендованнной машины , если есть",
+                "description": "Метод возвращает данные ...",
+                "operationId": "getUser",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id пользователя",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Пользователя нет"
+                    }
+                }
+            }
+        },
+        "/api/user/setRent": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Аренда машины пользователем",
+                "description": "Метод возвращает данные ...",
+                "operationId": "addRentCar",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "id пользователя",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "car_id",
+                        "in": "query",
+                        "description": "id машины",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "531": {
+                        "description": "У пользователя уже есть машина"
+                    },
+                    "532": {
+                        "description": "Эта машина уже арендована"
+                    },
+                    "404": {
+                        "description": "такого пользователя или машины нет"
+                    }
+                }
+            }
+        },
+        "/api/user/delRent": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "удаляет Аренду машины у пользователем",
+                "description": "Метод возвращает данные ...",
+                "operationId": "delRentCar",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "id пользователя",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "У пользователя нет машины"
+                    },
+                    "404": {
+                        "description": "такого пользователя или машины нет"
+                    }
+                }
+            }
+        },
+        "/api/getcars": {
+            "get": {
+                "tags": [
+                    "Cars"
+                ],
+                "summary": "Получить список всех доступных Машин",
+                "description": "Получаем список всех доступных Машин",
+                "operationId": "getCarAll",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Car"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/getcar/{id}": {
+            "get": {
+                "tags": [
+                    "Cars"
+                ],
+                "summary": "Получение  машины и арендатора , если есть",
+                "description": "Метод возвращает данные ...",
+                "operationId": "getCar",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id машиныя",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Такой машины нет"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Car": {
+                "title": "Car",
+                "description": "Car model",
+                "properties": {
+                    "id": {
+                        "title": "id",
+                        "description": "id",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "name": {
+                        "title": "Name",
+                        "description": "Название Машины",
+                        "type": "string",
+                        "example": "ford"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Car"
+                }
+            },
+            "User": {
+                "title": "User",
+                "description": "User model",
+                "properties": {
+                    "id": {
+                        "title": "id",
+                        "description": "ID",
+                        "format": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "title": "name",
+                        "description": "Имя Арендатора",
+                        "type": "string",
+                        "format": "string",
+                        "example": "Вася Пупкин"
+                    },
+                    "car_rent": {
+                        "title": "car_rent",
+                        "description": "Данные машины",
+                        "type": "object",
+                        "format": "object"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "User"
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Cars",
+            "description": "Аренда машин"
+        },
+        {
+            "name": "Users",
+            "description": "Арендаторы машин"
+        }
+    ]
+}
