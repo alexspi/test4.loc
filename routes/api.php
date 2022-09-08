@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('getusers',[RentApiController::class,'getUserAll']);
 Route::get('getuser/{id}',[RentApiController::class,'getUser']);
-Route::post('user/setRent',[RentApiController::class,'addRentCar']);
+Route::any('user/setRent',[RentApiController::class,'addRentCar']);
 Route::post('user/delRent',[RentApiController::class,'delRentCar']);
 
 Route::get('getcars',[RentApiController::class,'getCarAll']);

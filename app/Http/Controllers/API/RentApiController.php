@@ -4,10 +4,12 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\CarsResource;
 use App\Models\Car;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use OpenApi\Annotations as OA;
 
 class RentApiController extends AppBaseController
@@ -125,10 +127,17 @@ class RentApiController extends AppBaseController
 
     public function addRentCar(Request $request): JsonResponse
     {
-        $user_id = $request->user_id;
-        $car_id = $request->car_id;
-        $user = User::withCount('carRent')->find($user_id);
-        $car = Car::withCount('userRenter')->find($car_id);
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|numeric',
+            'car_id' => 'required|numeric',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError('Упс вы ввели неправильные данные', '500');
+        }
+
+        $user = User::withCount('carRent')->find($request->user_id);
+        $car = Car::withCount('userRenter')->find($request->car_id);
 
         if (!$user) {
             return $this->sendError('такого Пользователя нет', '404');
@@ -142,7 +151,7 @@ class RentApiController extends AppBaseController
         if ($car->user_renter_count !== 0) {
             return $this->sendError('Эта машина уже арендована', '532');
         }
-        $user->carRent()->attach($car_id);
+        $user->carRent()->attach($request->car_id);
         $user->refresh();
         return $this->sendResponse(new UserResource($user), 'User Rent Car successfully');
     }
@@ -218,7 +227,7 @@ class RentApiController extends AppBaseController
 
         $cars = Car::with('userRenter')->get();
 
-        return $this->sendResponse(new CarsResource($cars), 'Cars successfully');
+        return $this->sendResponse(CarsResource::collection($cars), 'Cars successfully');
     }
     /**
      * @OA\Get(
@@ -254,7 +263,7 @@ class RentApiController extends AppBaseController
         if (!$car) {
             return $this->sendError('Такой машины нет', '404');
         }
-        return $this->sendResponse(new CarResource($user), 'Car successfully');
+        return $this->sendResponse(new CarsResource($car), 'Car successfully');
 
     }
 
